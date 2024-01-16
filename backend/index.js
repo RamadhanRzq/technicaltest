@@ -108,6 +108,7 @@ app.get("/user/:id", async (req, res) => {
   }
 });
 
+//BIODATA
 app.post("/api/biodata", (req, res) => {
   const {
     posisi,
@@ -284,6 +285,308 @@ app.delete("/api/biodata/:user_id", (req, res) => {
 
   const query = `
     DELETE FROM biodata
+    WHERE user_id = ?
+  `;
+
+  const values = [user_id];
+
+  db.query(query, values, (err, result) => {
+    if (err) {
+      console.error("Error deleting data:", err);
+      res.status(500).send("Internal Server Error");
+    } else {
+      console.log("Data deleted successfully");
+      res.status(200).send("Data deleted successfully");
+    }
+  });
+});
+
+//PENDIDIKAN
+app.post("/api/pendidikan", (req, res) => {
+  const {
+    jenjang_pendidikan,
+    nama_institusi,
+    jurusan,
+    tahun_lulus,
+    ipk,
+    user_id,
+  } = req.body;
+
+  const query = `
+  INSERT INTO pendidikan_terakhir (
+    jenjang_pendidikan,
+    nama_institusi,
+    jurusan,
+    tahun_lulus,
+    ipk,
+    user_id
+  )
+  VALUES (?, ?, ?, ?, ?, ?);`;
+
+  const values = [
+    jenjang_pendidikan,
+    nama_institusi,
+    jurusan,
+    tahun_lulus,
+    ipk,
+    user_id,
+  ];
+
+  db.query(query, values, (err, result) => {
+    if (err) {
+      console.error("Error inserting data:", err);
+      res.status(500).send("Internal Server Error");
+    } else {
+      console.log("Data inserted successfully");
+      res.status(201).send("Data inserted successfully");
+    }
+  });
+});
+
+app.get("/api/pendidikan/:user_id", async (req, res) => {
+  try {
+    const userId = req.params.user_id;
+    const [rows] = await db.query(
+      "SELECT * FROM pendidikan_terakhir WHERE user_id = ?",
+      [userId]
+    );
+    console.log("Data retrieved successfully");
+    res.status(200).json(rows);
+  } catch (err) {
+    console.error("Error retrieving data:", err);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+app.patch("/api/pendidikan/:user_id", (req, res) => {
+  const email = req.params.user_id;
+
+  const { jenjang_pendidikan, nama_institusi, jurusan, tahun_lulus, ipk } =
+    req.body;
+
+  const query = `
+    UPDATE pendidikan_terakhir
+    SET
+    jenjang_pendidikan = ?,
+    nama_institusi = ?,
+    jurusan = ?,
+    tahun_lulus = ?,
+    ipk = ?,
+    WHERE user_id = ?
+  `;
+
+  const values = [
+    jenjang_pendidikan,
+    nama_institusi,
+    jurusan,
+    tahun_lulus,
+    ipk,
+  ];
+
+  db.query(query, values, (err, result) => {
+    if (err) {
+      console.error("Error updating data:", err);
+      res.status(500).send("Internal Server Error");
+    } else {
+      console.log("Data updated successfully");
+      res.status(200).send("Data updated successfully");
+    }
+  });
+});
+
+app.delete("/api/pendidikan/:user_id", (req, res) => {
+  const user_id = req.params.user_id;
+
+  const query = `
+    DELETE FROM pendidikan_terakhir
+    WHERE user_id = ?
+  `;
+
+  const values = [user_id];
+
+  db.query(query, values, (err, result) => {
+    if (err) {
+      console.error("Error deleting data:", err);
+      res.status(500).send("Internal Server Error");
+    } else {
+      console.log("Data deleted successfully");
+      res.status(200).send("Data deleted successfully");
+    }
+  });
+});
+
+//PELATIHAN
+app.post("/api/pelatihan", (req, res) => {
+  const { nama_pelatihan, sertifikat, tahun, user_id } = req.body;
+
+  const query = `
+  INSERT INTO riwayat_pelatihan (
+    nama_pelatihan, sertifikat, tahun, user_id
+  )
+  VALUES (?, ?, ?, ?, ?, ?);`;
+
+  const values = [nama_pelatihan, sertifikat, tahun, user_id];
+
+  db.query(query, values, (err, result) => {
+    if (err) {
+      console.error("Error inserting data:", err);
+      res.status(500).send("Internal Server Error");
+    } else {
+      console.log("Data inserted successfully");
+      res.status(201).send("Data inserted successfully");
+    }
+  });
+});
+
+app.get("/api/pelatihan/:user_id", async (req, res) => {
+  try {
+    const userId = req.params.user_id;
+    const [rows] = await db.query(
+      "SELECT * FROM riwayat_pelatihan WHERE user_id = ?",
+      [userId]
+    );
+    console.log("Data retrieved successfully");
+    res.status(200).json(rows);
+  } catch (err) {
+    console.error("Error retrieving data:", err);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+app.patch("/api/pelatihan/:user_id", (req, res) => {
+  const email = req.params.user_id;
+
+  const { nama_pelatihan, sertifikat, tahun } = req.body;
+
+  const query = `
+    UPDATE riwayat_pelatihan
+    SET
+    nama_pelatihan = ?, sertifikat = ?, tahun = ?
+    WHERE user_id = ?
+  `;
+
+  const values = [nama_pelatihan, sertifikat, tahun];
+
+  db.query(query, values, (err, result) => {
+    if (err) {
+      console.error("Error updating data:", err);
+      res.status(500).send("Internal Server Error");
+    } else {
+      console.log("Data updated successfully");
+      res.status(200).send("Data updated successfully");
+    }
+  });
+});
+
+app.delete("/api/pelatihan/:user_id", (req, res) => {
+  const user_id = req.params.user_id;
+
+  const query = `
+    DELETE FROM riwayat_pelatihan
+    WHERE user_id = ?
+  `;
+
+  const values = [user_id];
+
+  db.query(query, values, (err, result) => {
+    if (err) {
+      console.error("Error deleting data:", err);
+      res.status(500).send("Internal Server Error");
+    } else {
+      console.log("Data deleted successfully");
+      res.status(200).send("Data deleted successfully");
+    }
+  });
+});
+
+//PEKERJAAN
+app.post("/api/pekerjaan", (req, res) => {
+  const {
+    nama_perusahaan,
+    posisi_terakhir,
+    pendapatan_terakhir,
+    tahun,
+    user_id,
+  } = req.body;
+
+  const query = `
+  INSERT INTO riwayat_pelatihan (
+    nama_perusahaan,
+    posisi_terakhir,
+    pendapatan_terakhir,
+    tahun, 
+    user_id
+  )
+  VALUES (?, ?, ?, ?, ?);`;
+
+  const values = [
+    nama_perusahaan,
+    posisi_terakhir,
+    pendapatan_terakhir,
+    tahun,
+    user_id,
+  ];
+
+  db.query(query, values, (err, result) => {
+    if (err) {
+      console.error("Error inserting data:", err);
+      res.status(500).send("Internal Server Error");
+    } else {
+      console.log("Data inserted successfully");
+      res.status(201).send("Data inserted successfully");
+    }
+  });
+});
+
+app.get("/api/pekerjaan/:user_id", async (req, res) => {
+  try {
+    const userId = req.params.user_id;
+    const [rows] = await db.query(
+      "SELECT * FROM riwayat_pekerjaan WHERE user_id = ?",
+      [userId]
+    );
+    console.log("Data retrieved successfully");
+    res.status(200).json(rows);
+  } catch (err) {
+    console.error("Error retrieving data:", err);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+app.patch("/api/pekerjaan/:user_id", (req, res) => {
+  const email = req.params.user_id;
+
+  const { nama_perusahaan, posisi_terakhir, pendapatan_terakhir, tahun } =
+    req.body;
+
+  const query = `
+    UPDATE riwayat_pekerjaan
+    SET
+    nama_perusahaan = ?,
+    posisi_terakhir = ?,
+    pendapatan_terakhir = ?,
+    tahun = ?,
+    WHERE user_id = ?
+  `;
+
+  const values = [nama_perusahaan, posisi_terakhir, pendapatan_terakhir, tahun];
+
+  db.query(query, values, (err, result) => {
+    if (err) {
+      console.error("Error updating data:", err);
+      res.status(500).send("Internal Server Error");
+    } else {
+      console.log("Data updated successfully");
+      res.status(200).send("Data updated successfully");
+    }
+  });
+});
+
+app.delete("/api/pekerjaan/:user_id", (req, res) => {
+  const user_id = req.params.user_id;
+
+  const query = `
+    DELETE FROM riwayat_pekerjaan
     WHERE user_id = ?
   `;
 

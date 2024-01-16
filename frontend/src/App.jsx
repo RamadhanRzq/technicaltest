@@ -7,6 +7,7 @@ import HomeAdmin from "./pages/HomeAdmin";
 import AdminRoutes from "./routes/AdminRoutes";
 import FormBiodataAdd from "./pages/FormBiodataAdd";
 import FormBiodataUpdate from "./pages/FormBiodataUpdate";
+import FormPendidikanAdd from "./pages/FormPendidikanAdd";
 
 const isAuthenticated = () => {
   return !!localStorage.getItem("token");
@@ -35,6 +36,10 @@ export default function App() {
         <Route
           path="/formbiodata/update"
           element={<PrivateRoute element={<FormBiodataUpdate />} />}
+        />
+        <Route
+          path="/formpendidikan/add"
+          element={<PrivateRoute element={<FormPendidikanAdd />} />}
         />
 
         <Route element={<AdminRoutes />}>

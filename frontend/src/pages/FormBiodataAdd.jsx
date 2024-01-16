@@ -6,7 +6,7 @@ import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 
-export default function FormBiodata() {
+export default function FormBiodataAdd() {
   const navigate = useNavigate();
   const userId = useSelector((state) => state.auth.user.id);
 

@@ -5,10 +5,12 @@ import axios from "axios";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 export default function FormBiodataUpdate() {
   const userRoles = useSelector((state) => state.auth.user.roles);
   const userId = useSelector((state) => state.auth.user.id);
+  const navigate = useNavigate();
 
   const isAdmin = userRoles === "admin";
 
@@ -42,8 +44,6 @@ export default function FormBiodataUpdate() {
 
   const onSubmitForm = async (data) => {
     try {
-      console.log("Submitting data:", data);
-
       const response = await axios.patch(
         `http://localhost:3000/api/biodata/${userId}`,
         data
@@ -53,6 +53,7 @@ export default function FormBiodataUpdate() {
 
       if (response.status === 200) {
         alert("Sukses Update Data");
+        navigate("/home");
       } else {
         console.error("Unexpected server response:", response.status);
       }
@@ -117,7 +118,7 @@ export default function FormBiodataUpdate() {
         )}
       </div>
       <div className="flex flex-col shadow-xl mx-auto w-1/2 mt-4  rounded-md">
-        <div className="text-2xl items-center justify-center flex w-full">
+        <div className="text-2xl items-center justify-center flex w-full font-bold">
           BIODATA CALON KARYAWAN
         </div>
         <form onSubmit={handleSubmit(onSubmitForm)}>
