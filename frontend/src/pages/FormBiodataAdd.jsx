@@ -4,21 +4,33 @@ import axios from "axios";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
+import { useSelector } from "react-redux";
 
 export default function FormBiodata() {
   const navigate = useNavigate();
+  const userId = useSelector((state) => state.auth.user.id);
 
   const handleKembali = () => {
     navigate("/home");
   };
 
   const schema = yup.object().shape({
-    posisi: yup.string().required("Posisi is required"),
-    nama: yup.string().required("Nama is required"),
-    no_ktp: yup.string().required("No. KTP is required"),
-    tempat_tgl_lahir: yup
-      .string()
-      .required("Tempat, Tanggal Lahir is required"),
+    posisi: yup.string().required("required"),
+    nama: yup.string().required("required"),
+    no_ktp: yup.string().required("required"),
+    tempat_tgl_lahir: yup.string().required("required"),
+    jenis_kelamin: yup.string().required("required"),
+    agama: yup.string().required("required"),
+    golongan_darah: yup.string().required("required"),
+    status: yup.string().required("required"),
+    alamat_ktp: yup.string().required("required"),
+    alamat_tinggal: yup.string().required("is required"),
+    email: yup.string().required("required"),
+    no_telp: yup.string().required("required"),
+    orang_terdekat: yup.string().required("required"),
+    skill: yup.string().required("required"),
+    penempatan_bebas: yup.string().required("required"),
+    penghasilan_diharapkan: yup.string().required("required"),
   });
 
   const {
@@ -30,12 +42,28 @@ export default function FormBiodata() {
   });
 
   const onSubmitForm = async (data) => {
+    const payload = {
+      posisi: data.posisi,
+      nama: data.nama,
+      no_ktp: data.no_ktp,
+      tempat_tgl_lahir: data.tempat_tgl_lahir,
+      jenis_kelamin: data.jenis_kelamin,
+      agama: data.agama,
+      golongan_darah: data.golongan_darah,
+      status: data.status,
+      alamat_ktp: data.alamat_ktp,
+      alamat_tinggal: data.alamat_tinggal,
+      email: data.email,
+      no_telp: data.no_telp,
+      orang_terdekat: data.orang_terdekat,
+      skill: data.skill,
+      penempatan_bebas: data.penempatan_bebas,
+      penghasilan_diharapkan: data.penghasilan_diharapkan,
+      user_id: userId,
+    };
+    console.log(payload);
     try {
-      const response = await axios.post(
-        "http://localhost:3000/api/biodata",
-        data
-      );
-      console.log("Server response:", response.data);
+      await axios.post("http://localhost:3000/api/biodata", payload);
       navigate("/home");
     } catch (error) {
       console.error(
@@ -65,7 +93,7 @@ export default function FormBiodata() {
               <span className="label-text">Posisi Yang Dilamar</span>
             </div>
             <input
-              type="posisi"
+              type="text"
               className="input input-bordered"
               name="posisi"
               id="posisi"
@@ -81,7 +109,7 @@ export default function FormBiodata() {
               <span className="label-text">Nama</span>
             </div>
             <input
-              type="nama"
+              type="text"
               className="input input-bordered"
               name="nama"
               id="nama"
@@ -95,7 +123,7 @@ export default function FormBiodata() {
               <span className="label-text">No. KTP</span>
             </div>
             <input
-              type="no_ktp"
+              type="text"
               className="input input-bordered"
               name="no_ktp"
               id="no_ktp"
@@ -111,7 +139,7 @@ export default function FormBiodata() {
               <span className="label-text">Tempat, Tanggal Lahir</span>
             </div>
             <input
-              type="tempat_tgl_lahir"
+              type="text"
               className="input input-bordered"
               name="tempat_tgl_lahir"
               id="tempat_tgl_lahir"
@@ -144,7 +172,7 @@ export default function FormBiodata() {
               <span className="label-text">Agama</span>
             </div>
             <input
-              type="agama"
+              type="text"
               className="input input-bordered"
               name="agama"
               id="agama"
@@ -160,7 +188,7 @@ export default function FormBiodata() {
               <span className="label-text">Golongan Darah</span>
             </div>
             <input
-              type="golongan_darah"
+              type="text"
               className="input input-bordered"
               name="golongan_darah"
               id="golongan_darah"
@@ -176,7 +204,7 @@ export default function FormBiodata() {
               <span className="label-text">Status</span>
             </div>
             <input
-              type="status"
+              type="text"
               className="input input-bordered"
               name="status"
               id="status"
@@ -192,7 +220,7 @@ export default function FormBiodata() {
               <span className="label-text">Alamat KTP</span>
             </div>
             <input
-              type="alamat_ktp"
+              type="text"
               className="input input-bordered"
               name="alamat_ktp"
               id="alamat_ktp"
@@ -208,7 +236,7 @@ export default function FormBiodata() {
               <span className="label-text">Alamat Tinggal </span>
             </div>
             <input
-              type="alamat_tinggal"
+              type="text"
               className="input input-bordered"
               name="alamat_tinggal"
               id="alamat_tinggal"
@@ -224,7 +252,7 @@ export default function FormBiodata() {
               <span className="label-text">Email</span>
             </div>
             <input
-              type="email"
+              type="text"
               className="input input-bordered"
               name="email"
               id="email"
@@ -240,7 +268,7 @@ export default function FormBiodata() {
               <span className="label-text">Nomor Telepon</span>
             </div>
             <input
-              type="no_telp"
+              type="text"
               className="input input-bordered"
               name="no_telp"
               id="no_telp"
@@ -258,7 +286,7 @@ export default function FormBiodata() {
               </span>
             </div>
             <input
-              type="orang_terdekat"
+              type="text"
               className="input input-bordered"
               name="orang_terdekat"
               id="orang_terdekat"
@@ -274,7 +302,7 @@ export default function FormBiodata() {
               <span className="label-text">Skill</span>
             </div>
             <input
-              type="skill"
+              type="text"
               className="input input-bordered"
               name="skill"
               id="skill"
@@ -311,7 +339,7 @@ export default function FormBiodata() {
               </span>
             </div>
             <input
-              type="penghasilan_diharapkan"
+              type="text"
               className="input input-bordered"
               name="penghasilan_diharapkan"
               id="penghasilan_diharapkan"

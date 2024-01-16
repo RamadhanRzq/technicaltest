@@ -5,7 +5,8 @@ import Layout from "./Layout";
 import SignUp from "./pages/SignUp";
 import HomeAdmin from "./pages/HomeAdmin";
 import AdminRoutes from "./routes/AdminRoutes";
-import FormBiodata from "./pages/FormBiodata";
+import FormBiodataAdd from "./pages/FormBiodataAdd";
+import FormBiodataUpdate from "./pages/FormBiodataUpdate";
 
 const isAuthenticated = () => {
   return !!localStorage.getItem("token");
@@ -29,7 +30,11 @@ export default function App() {
         <Route path="/home" element={<PrivateRoute element={<Home />} />} />
         <Route
           path="/formbiodata/add"
-          element={<PrivateRoute element={<FormBiodata />} />}
+          element={<PrivateRoute element={<FormBiodataAdd />} />}
+        />
+        <Route
+          path="/formbiodata/update"
+          element={<PrivateRoute element={<FormBiodataUpdate />} />}
         />
 
         <Route element={<AdminRoutes />}>

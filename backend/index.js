@@ -126,29 +126,30 @@ app.post("/api/biodata", (req, res) => {
     skill,
     penempatan_bebas,
     penghasilan_diharapkan,
+    user_id,
   } = req.body;
 
   const query = `
-    INSERT INTO biodata (
-      posisi,
-      nama,
-      no_ktp,
-      tempat_tgl_lahir,
-      jenis_kelamin,
-      agama,
-      golongan_darah,
-      status,
-      alamat_ktp,
-      alamat_tinggal,
-      email,
-      no_telp,
-      orang_terdekat,
-      skill,
-      penempatan_bebas,
-      penghasilan_diharapkan
-    )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `;
+  INSERT INTO biodata (
+    posisi,
+    nama,
+    no_ktp,
+    tempat_tgl_lahir,
+    jenis_kelamin,
+    agama,
+    golongan_darah,
+    status,
+    alamat_ktp,
+    alamat_tinggal,
+    email,
+    no_telp,
+    orang_terdekat,
+    skill,
+    penempatan_bebas,
+    penghasilan_diharapkan,
+    user_id
+  )
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`;
 
   const values = [
     posisi,
@@ -167,6 +168,7 @@ app.post("/api/biodata", (req, res) => {
     skill,
     penempatan_bebas,
     penghasilan_diharapkan,
+    user_id,
   ];
 
   db.query(query, values, (err, result) => {
@@ -191,10 +193,10 @@ app.get("/api/biodata", async (req, res) => {
   }
 });
 
-app.get("/api/biodata/:email", async (req, res) => {
+app.get("/api/biodata/:user_id", async (req, res) => {
   try {
-    const userId = req.params.email;
-    const [rows] = await db.query("SELECT * FROM biodata WHERE email = ?", [
+    const userId = req.params.user_id;
+    const [rows] = await db.query("SELECT * FROM biodata WHERE user_id = ?", [
       userId,
     ]);
     console.log("Data retrieved successfully");
@@ -205,8 +207,8 @@ app.get("/api/biodata/:email", async (req, res) => {
   }
 });
 
-app.patch("/api/biodata/:email", (req, res) => {
-  const email = req.params.email;
+app.patch("/api/biodata/:user_id", (req, res) => {
+  const email = req.params.user_id;
 
   const {
     posisi,
@@ -244,7 +246,7 @@ app.patch("/api/biodata/:email", (req, res) => {
       skill = ?,
       penempatan_bebas = ?,
       penghasilan_diharapkan = ?
-    WHERE email = ?
+    WHERE user_id = ?
   `;
 
   const values = [
@@ -273,6 +275,27 @@ app.patch("/api/biodata/:email", (req, res) => {
     } else {
       console.log("Data updated successfully");
       res.status(200).send("Data updated successfully");
+    }
+  });
+});
+
+app.delete("/api/biodata/:user_id", (req, res) => {
+  const user_id = req.params.user_id;
+
+  const query = `
+    DELETE FROM biodata
+    WHERE user_id = ?
+  `;
+
+  const values = [user_id];
+
+  db.query(query, values, (err, result) => {
+    if (err) {
+      console.error("Error deleting data:", err);
+      res.status(500).send("Internal Server Error");
+    } else {
+      console.log("Data deleted successfully");
+      res.status(200).send("Data deleted successfully");
     }
   });
 });

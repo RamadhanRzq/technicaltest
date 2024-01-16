@@ -1,37 +1,16 @@
-import { FaPlusCircle, FaTrash } from "react-icons/fa";
-import { LuPencilLine } from "react-icons/lu";
 import { useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
-import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
 import axios from "axios";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 
-export default function Home() {
-  const navigate = useNavigate();
-  const [formDisabled, setFormDisabled] = useState(true);
-  const [isDataAvailable, setIsDataAvailable] = useState(true);
+export default function FormBiodataUpdate() {
   const userRoles = useSelector((state) => state.auth.user.roles);
   const userId = useSelector((state) => state.auth.user.id);
 
   const isAdmin = userRoles === "admin";
-
-  const handleTambahBiodata = () => {
-    navigate("/formbiodata/add");
-  };
-
-  const handleFormDisabled = () => {
-    navigate("/formbiodata/update");
-  };
-
-  const handleDelete = () => {
-    axios
-      .delete(`http://localhost:3000/api/biodata/${userId}`)
-      .catch((error) => {
-        console.log("Error deleting data:", error);
-      });
-  };
 
   const schema = yup.object().shape({
     posisi: yup.string().required("required"),
@@ -74,7 +53,6 @@ export default function Home() {
 
       if (response.status === 200) {
         alert("Sukses Update Data");
-        setFormDisabled(true);
       } else {
         console.error("Unexpected server response:", response.status);
       }
@@ -115,13 +93,9 @@ export default function Home() {
             "penghasilan_diharapkan",
             biodataUser.penghasilan_diharapkan
           );
-          setIsDataAvailable(true);
-        } else {
-          setIsDataAvailable(false);
         }
       } catch (error) {
         console.error(error);
-        setIsDataAvailable(false);
       }
     };
 
@@ -131,38 +105,7 @@ export default function Home() {
   return (
     <>
       <div className="flex justify-end">
-        {isDataAvailable ? (
-          <>
-            <div className="m-4">
-              <button
-                className="flex items-center p-2 rounded-lg border-none bg-color1_selected text-white hover:bg-hijau"
-                onClick={handleFormDisabled}
-              >
-                Edit Biodata
-                <LuPencilLine className="ml-2" />
-              </button>
-            </div>
-            <div className="m-4">
-              <button
-                className="flex items-center p-2 rounded-lg border-none bg-color1_selected text-white hover:bg-hijau"
-                onClick={handleDelete}
-              >
-                Hapus Biodata
-                <FaTrash className="ml-2" />
-              </button>
-            </div>
-          </>
-        ) : (
-          <div className="m-4">
-            <button
-              className="flex items-center p-2 rounded-lg border-none bg-color1_selected text-white hover:bg-hijau"
-              onClick={handleTambahBiodata}
-            >
-              Tambah Biodata
-              <FaPlusCircle className="ml-2" />
-            </button>
-          </div>
-        )}
+        <div className="m-4"></div>
         {isAdmin && (
           <div className="m-4">
             <Link to="/admin/home">
@@ -184,7 +127,6 @@ export default function Home() {
                 <span className="label-text">Posisi Yang Dilamar</span>
               </div>
               <input
-                disabled={formDisabled}
                 type="posisi"
                 className="input input-bordered"
                 name="posisi"
@@ -201,7 +143,6 @@ export default function Home() {
                 <span className="label-text">Nama</span>
               </div>
               <input
-                disabled={formDisabled}
                 type="nama"
                 className="input input-bordered"
                 name="nama"
@@ -218,7 +159,6 @@ export default function Home() {
                 <span className="label-text">No. KTP</span>
               </div>
               <input
-                disabled={formDisabled}
                 type="no_ktp"
                 className="input input-bordered"
                 name="no_ktp"
@@ -235,7 +175,6 @@ export default function Home() {
                 <span className="label-text">Tempat, Tanggal Lahir</span>
               </div>
               <input
-                disabled={formDisabled}
                 type="tempat_tgl_lahir"
                 className="input input-bordered"
                 name="tempat_tgl_lahir"
@@ -253,7 +192,6 @@ export default function Home() {
               </div>
               <div className="mt-1">
                 <select
-                  disabled={formDisabled}
                   id="jenis_kelamin"
                   name="jenis_kelamin"
                   autoComplete="jenis_kelamin"
@@ -270,7 +208,6 @@ export default function Home() {
                 <span className="label-text">Agama</span>
               </div>
               <input
-                disabled={formDisabled}
                 type="agama"
                 className="input input-bordered"
                 name="agama"
@@ -287,7 +224,6 @@ export default function Home() {
                 <span className="label-text">Golongan Darah</span>
               </div>
               <input
-                disabled={formDisabled}
                 type="golongan_darah"
                 className="input input-bordered"
                 name="golongan_darah"
@@ -304,7 +240,6 @@ export default function Home() {
                 <span className="label-text">Status</span>
               </div>
               <input
-                disabled={formDisabled}
                 type="status"
                 className="input input-bordered"
                 name="status"
@@ -321,7 +256,6 @@ export default function Home() {
                 <span className="label-text">Alamat KTP</span>
               </div>
               <input
-                disabled={formDisabled}
                 type="alamat_ktp"
                 className="input input-bordered"
                 name="alamat_ktp"
@@ -338,7 +272,6 @@ export default function Home() {
                 <span className="label-text">Alamat Tinggal </span>
               </div>
               <input
-                disabled={formDisabled}
                 type="alamat_tinggal"
                 className="input input-bordered"
                 name="alamat_tinggal"
@@ -355,7 +288,6 @@ export default function Home() {
                 <span className="label-text">Email</span>
               </div>
               <input
-                disabled={formDisabled}
                 type="email"
                 className="input input-bordered"
                 name="email"
@@ -372,7 +304,6 @@ export default function Home() {
                 <span className="label-text">Nomor Telepon</span>
               </div>
               <input
-                disabled={formDisabled}
                 type="no_telp"
                 className="input input-bordered"
                 name="no_telp"
@@ -391,7 +322,6 @@ export default function Home() {
                 </span>
               </div>
               <input
-                disabled={formDisabled}
                 type="orang_terdekat"
                 className="input input-bordered"
                 name="orang_terdekat"
@@ -408,7 +338,6 @@ export default function Home() {
                 <span className="label-text">Skill</span>
               </div>
               <input
-                disabled={formDisabled}
                 type="skill"
                 className="input input-bordered"
                 name="skill"
@@ -428,7 +357,6 @@ export default function Home() {
               </div>
               <div className="mt-1">
                 <select
-                  disabled={formDisabled}
                   id="penempatan_bebas"
                   name="penempatan_bebas"
                   autoComplete="penempatan_bebas"
@@ -447,7 +375,6 @@ export default function Home() {
                 </span>
               </div>
               <input
-                disabled={formDisabled}
                 type="penghasilan_diharapkan"
                 className="input input-bordered"
                 name="penghasilan_diharapkan"
