@@ -21,24 +21,24 @@ const secretKey =
 
 app.post("/login", async (req, res) => {
   try {
-    const { username, password } = req.body;
-    if (!username || !password) {
+    const { email, password } = req.body;
+    if (!email || !password) {
       return res
         .status(400)
         .json({ error: "Username and password are required" });
     }
 
     const [rows] = await db.query(
-      "SELECT * FROM login WHERE username = ? AND password = ?",
-      [username, password]
+      "SELECT * FROM login WHERE email = ? AND password = ?",
+      [email, password]
     );
 
     if (rows.length === 0) {
-      return res.status(401).json({ error: "Invalid username or password" });
+      return res.status(401).json({ error: "Invalid email or password" });
     }
 
     const token = jwt.sign(
-      { userId: rows[0].id, username: rows[0].username },
+      { userId: rows[0].id, email: rows[0].email },
       secretKey,
       { expiresIn: "1h" }
     );
@@ -52,16 +52,20 @@ app.post("/login", async (req, res) => {
 
 app.post("/signup", async (req, res) => {
   try {
-    const { username, password } = req.body;
-    if (!username || !password) {
-      return res
-        .status(400)
-        .json({ error: "Username and password are required" });
+    const { email, password } = req.body;
+    const [existingUsers] = await db.query(
+      "SELECT * FROM login WHERE email = ?",
+      [email]
+    );
+
+    if (existingUsers.length > 0) {
+      return res.status(400).json({ error: "Email is already registered" });
     }
     const insertResult = await db.query(
-      "INSERT INTO login (username, password) VALUES (?, ?)",
-      [username, password]
+      "INSERT INTO login (email, password) VALUES (?, ?)",
+      [email, password]
     );
+
     res.json({
       success: true,
       message: "Data inserted successfully",

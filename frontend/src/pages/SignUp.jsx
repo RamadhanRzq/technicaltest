@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-export default function Login() {
-  const navigate = useNavigate();
+export default function SignUp() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -18,15 +17,12 @@ export default function Login() {
     e.preventDefault();
 
     try {
-      const response = await axios.post(
-        "http://localhost:3000/login",
-        formData
-      );
-      const { token } = response.data;
-      localStorage.setItem("token", token);
-      navigate("/home");
+      await axios.post("http://localhost:3000/signup", formData);
     } catch (error) {
-      console.error("Error logging in:", error.response?.data || error.message);
+      console.error(
+        "Error registering user:",
+        error.response?.data || error.message
+      );
     }
   };
 
@@ -35,7 +31,7 @@ export default function Login() {
       <div className="absolute bg-white rounded-xl shadow-xl p-10 w-[450px]">
         <div className="flex flex-col gap-4">
           <p className="font-semibold text-center text-3xl text-color1_selected">
-            Login
+            Sign Up
           </p>
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col gap-4">
@@ -67,7 +63,7 @@ export default function Login() {
                     name="password"
                     id="password"
                     className="border-2 border-gray-500 w-full text-xl"
-                    autoComplete="current-password"
+                    autoComplete="new-password"
                     value={formData.password}
                     onChange={handleChange}
                   />
@@ -77,14 +73,14 @@ export default function Login() {
                 type="submit"
                 className="bg-color1_selected hover:bg-color_home hover:text-color1_selected p-3 rounded-md text-color_home mt-2"
               >
-                Login
+                Sign Up
               </button>
             </div>
           </form>
-          <Link to="/signup">
+          <Link to="/login">
             <p className="mx-auto">
-              Belum punya akun?
-              <span className="text-blue-500 cursor-pointer"> Daftar</span>
+              Sudah punya akun?
+              <span className="text-blue-500 cursor-pointer"> Login</span>
             </p>
           </Link>
         </div>
