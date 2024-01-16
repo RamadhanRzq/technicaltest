@@ -1,5 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import Input from "../components/Input";
+import React from "react";
+import axios from "axios";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { useForm } from "react-hook-form";
 
 export default function FormBiodata() {
   const navigate = useNavigate();
@@ -7,6 +11,40 @@ export default function FormBiodata() {
   const handleKembali = () => {
     navigate("/home");
   };
+
+  const schema = yup.object().shape({
+    posisi: yup.string().required("Posisi is required"),
+    nama: yup.string().required("Nama is required"),
+    no_ktp: yup.string().required("No. KTP is required"),
+    tempat_tgl_lahir: yup
+      .string()
+      .required("Tempat, Tanggal Lahir is required"),
+  });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  const onSubmitForm = async (data) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/biodata",
+        data
+      );
+      console.log("Server response:", response.data);
+      navigate("/home");
+    } catch (error) {
+      console.error(
+        "Error submitting data:",
+        error.response?.data || error.message
+      );
+    }
+  };
+
   return (
     <div className="flex flex-col shadow-xl mx-auto w-1/2 mt-4  rounded-md">
       <div className="m-4">
@@ -20,16 +58,70 @@ export default function FormBiodata() {
       <div className="text-2xl items-center justify-center flex w-full">
         FORM BIODATA CALON KARYAWAN
       </div>
-      <form>
+      <form onSubmit={handleSubmit(onSubmitForm)}>
         <div className="flex flex-col gap-4 m-16 ">
-          <Input title="Posisi Yang Dilamar " input="posisi" type="text" />
-          <Input title="Nama " input="nama" type="text" />
-          <Input title="No KTP " input="no_ktp" type="number" />
-          <Input
-            title="Tempat, Tanggal Lahir"
-            input="tempat_tgl_lahir"
-            type="text"
-          />
+          <label className="form-control">
+            <div className="label">
+              <span className="label-text">Posisi Yang Dilamar</span>
+            </div>
+            <input
+              type="posisi"
+              className="input input-bordered"
+              name="posisi"
+              id="posisi"
+              autoComplete="posisi"
+              {...register("posisi")}
+            />
+            <p className="error text-sm text-red-600">
+              {errors.posisi?.message}
+            </p>
+          </label>
+          <label className="form-control">
+            <div className="label">
+              <span className="label-text">Nama</span>
+            </div>
+            <input
+              type="nama"
+              className="input input-bordered"
+              name="nama"
+              id="nama"
+              autoComplete="nama"
+              {...register("nama")}
+            />
+            <p className="error text-sm text-red-600">{errors.nama?.message}</p>
+          </label>
+          <label className="form-control">
+            <div className="label">
+              <span className="label-text">No. KTP</span>
+            </div>
+            <input
+              type="no_ktp"
+              className="input input-bordered"
+              name="no_ktp"
+              id="no_ktp"
+              autoComplete="no_ktp"
+              {...register("no_ktp")}
+            />
+            <p className="error text-sm text-red-600">
+              {errors.no_ktp?.message}
+            </p>
+          </label>
+          <label className="form-control">
+            <div className="label">
+              <span className="label-text">Tempat, Tanggal Lahir</span>
+            </div>
+            <input
+              type="tempat_tgl_lahir"
+              className="input input-bordered"
+              name="tempat_tgl_lahir"
+              id="tempat_tgl_lahir"
+              autoComplete="tempat_tgl_lahir"
+              {...register("tempat_tgl_lahir")}
+            />
+            <p className="error text-sm text-red-600">
+              {errors.tempat_tgl_lahir?.message}
+            </p>
+          </label>
           <div className="col-span-1">
             <div className="label">
               <span className="label-text">Jenis Kelamin</span>
@@ -40,26 +132,159 @@ export default function FormBiodata() {
                 name="jenis_kelamin"
                 autoComplete="jenis_kelamin"
                 className="w-full rounded-lg border-2 py-2 border-gray-300"
+                {...register("jenis_kelamin")}
               >
-                <option value="">Pilih Jenis Kelamin</option>
                 <option value="laki-laki">Laki-Laki</option>
                 <option value="perempuan">Perempuan</option>
               </select>
             </div>
           </div>
-          <Input title="Agama" input="agama" type="text" />
-          <Input title="Golongan Darah " input="golongan_darah" type="text" />
-          <Input title="Status " input="status" type="text" />
-          <Input title="Alamat KTP " input="alamat_ktp" type="text" />
-          <Input title="Alamat Tinggal " input="alamat_tinggal" type="text" />
-          <Input title="Email " input="email" type="text" />
-          <Input title="No Telepon " input="no_telp" type="number" />
-          <Input
-            title="Orang Terdekat Yang Dapat Dihubungi"
-            input="orang_terdekat"
-            type="text"
-          />
-          <Input title="Skill" input="skill" type="text" />
+          <label className="form-control">
+            <div className="label">
+              <span className="label-text">Agama</span>
+            </div>
+            <input
+              type="agama"
+              className="input input-bordered"
+              name="agama"
+              id="agama"
+              autoComplete="agama"
+              {...register("agama")}
+            />
+            <p className="error text-sm text-red-600">
+              {errors.agama?.message}
+            </p>
+          </label>
+          <label className="form-control">
+            <div className="label">
+              <span className="label-text">Golongan Darah</span>
+            </div>
+            <input
+              type="golongan_darah"
+              className="input input-bordered"
+              name="golongan_darah"
+              id="golongan_darah"
+              autoComplete="golongan_darah"
+              {...register("golongan_darah")}
+            />
+            <p className="error text-sm text-red-600">
+              {errors.golongan_darah?.message}
+            </p>
+          </label>
+          <label className="form-control">
+            <div className="label">
+              <span className="label-text">Status</span>
+            </div>
+            <input
+              type="status"
+              className="input input-bordered"
+              name="status"
+              id="status"
+              autoComplete="status"
+              {...register("status")}
+            />
+            <p className="error text-sm text-red-600">
+              {errors.status?.message}
+            </p>
+          </label>
+          <label className="form-control">
+            <div className="label">
+              <span className="label-text">Alamat KTP</span>
+            </div>
+            <input
+              type="alamat_ktp"
+              className="input input-bordered"
+              name="alamat_ktp"
+              id="alamat_ktp"
+              autoComplete="alamat_ktp"
+              {...register("alamat_ktp")}
+            />
+            <p className="error text-sm text-red-600">
+              {errors.alamat_ktp?.message}
+            </p>
+          </label>
+          <label className="form-control">
+            <div className="label">
+              <span className="label-text">Alamat Tinggal </span>
+            </div>
+            <input
+              type="alamat_tinggal"
+              className="input input-bordered"
+              name="alamat_tinggal"
+              id="alamat_tinggal"
+              autoComplete="alamat_tinggal"
+              {...register("alamat_tinggal")}
+            />
+            <p className="error text-sm text-red-600">
+              {errors.alamat_tinggal?.message}
+            </p>
+          </label>
+          <label className="form-control">
+            <div className="label">
+              <span className="label-text">Email</span>
+            </div>
+            <input
+              type="email"
+              className="input input-bordered"
+              name="email"
+              id="email"
+              autoComplete="email"
+              {...register("email")}
+            />
+            <p className="error text-sm text-red-600">
+              {errors.email?.message}
+            </p>
+          </label>
+          <label className="form-control">
+            <div className="label">
+              <span className="label-text">Nomor Telepon</span>
+            </div>
+            <input
+              type="no_telp"
+              className="input input-bordered"
+              name="no_telp"
+              id="no_telp"
+              autoComplete="no_telp"
+              {...register("no_telp")}
+            />
+            <p className="error text-sm text-red-600">
+              {errors.no_telp?.message}
+            </p>
+          </label>
+          <label className="form-control">
+            <div className="label">
+              <span className="label-text">
+                Orang Terdekat Yang Dapat Dihubungi
+              </span>
+            </div>
+            <input
+              type="orang_terdekat"
+              className="input input-bordered"
+              name="orang_terdekat"
+              id="orang_terdekat"
+              autoComplete="orang_terdekat"
+              {...register("orang_terdekat")}
+            />
+            <p className="error text-sm text-red-600">
+              {errors.orang_terdekat?.message}
+            </p>
+          </label>
+          <label className="form-control">
+            <div className="label">
+              <span className="label-text">Skill</span>
+            </div>
+            <input
+              type="skill"
+              className="input input-bordered"
+              name="skill"
+              id="skill"
+              autoComplete="skill"
+              {...register("skill")}
+            />
+            <p className="error text-sm text-red-600">
+              {errors.skill?.message}
+            </p>
+          </label>
           <div className="col-span-1">
             <div className="label">
               <span className="label-text">
@@ -72,17 +297,31 @@ export default function FormBiodata() {
                 name="penempatan_bebas"
                 autoComplete="penempatan_bebas"
                 className="w-full rounded-lg border-2 py-2 border-gray-300"
+                {...register("penempatan_bebas")}
               >
                 <option value="Ya">Ya</option>
                 <option value="Tidak">Tidak</option>
               </select>
             </div>
           </div>
-          <Input
-            title="Penghasilan Yang Diharapkan Per Bulan"
-            input="skill"
-            type="number"
-          />
+          <label className="form-control">
+            <div className="label">
+              <span className="label-text">
+                Penghasilan Yang Diharapkan Per Bulan
+              </span>
+            </div>
+            <input
+              type="penghasilan_diharapkan"
+              className="input input-bordered"
+              name="penghasilan_diharapkan"
+              id="penghasilan_diharapkan"
+              autoComplete="penghasilan_diharapkan"
+              {...register("penghasilan_diharapkan")}
+            />
+            <p className="error text-sm text-red-600">
+              {errors.penghasilan_diharapkan?.message}
+            </p>
+          </label>
           <button className="bg-color1_selected hover:bg-color_home hover:text-color1_selected p-3 rounded-md text-color_home mt-2">
             Simpan
           </button>
