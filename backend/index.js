@@ -113,8 +113,7 @@ app.post("/api/biodata", (req, res) => {
     posisi,
     nama,
     no_ktp,
-    tempat_lahir,
-    tanggal_lahir,
+    tempat_tgl_lahir,
     jenis_kelamin,
     agama,
     golongan_darah,
@@ -134,8 +133,7 @@ app.post("/api/biodata", (req, res) => {
       posisi,
       nama,
       no_ktp,
-      tempat_lahir,
-      tanggal_lahir,
+      tempat_tgl_lahir,
       jenis_kelamin,
       agama,
       golongan_darah,
@@ -149,15 +147,14 @@ app.post("/api/biodata", (req, res) => {
       penempatan_bebas,
       penghasilan_diharapkan
     )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
 
   const values = [
     posisi,
     nama,
     no_ktp,
-    tempat_lahir,
-    tanggal_lahir,
+    tempat_tgl_lahir,
     jenis_kelamin,
     agama,
     golongan_darah,
@@ -181,6 +178,17 @@ app.post("/api/biodata", (req, res) => {
       res.status(201).send("Data inserted successfully");
     }
   });
+});
+
+app.get("/api/biodata", async (req, res) => {
+  try {
+    const [rows] = await db.execute("SELECT * FROM biodata");
+    console.log("Data retrieved successfully");
+    res.status(200).json(rows);
+  } catch (err) {
+    console.error("Error retrieving data:", err);
+    res.status(500).send("Internal Server Error");
+  }
 });
 
 app.listen(port, () => {
