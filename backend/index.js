@@ -191,6 +191,92 @@ app.get("/api/biodata", async (req, res) => {
   }
 });
 
+app.get("/api/biodata/:email", async (req, res) => {
+  try {
+    const userId = req.params.email;
+    const [rows] = await db.query("SELECT * FROM biodata WHERE email = ?", [
+      userId,
+    ]);
+    console.log("Data retrieved successfully");
+    res.status(200).json(rows);
+  } catch (err) {
+    console.error("Error retrieving data:", err);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+app.patch("/api/biodata/:email", (req, res) => {
+  const email = req.params.email;
+
+  const {
+    posisi,
+    nama,
+    no_ktp,
+    tempat_tgl_lahir,
+    jenis_kelamin,
+    agama,
+    golongan_darah,
+    status,
+    alamat_ktp,
+    alamat_tinggal,
+    no_telp,
+    orang_terdekat,
+    skill,
+    penempatan_bebas,
+    penghasilan_diharapkan,
+  } = req.body;
+
+  const query = `
+    UPDATE biodata
+    SET
+      posisi = ?,
+      nama = ?,
+      no_ktp = ?,
+      tempat_tgl_lahir = ?,
+      jenis_kelamin = ?,
+      agama = ?,
+      golongan_darah = ?,
+      status = ?,
+      alamat_ktp = ?,
+      alamat_tinggal = ?,
+      no_telp = ?,
+      orang_terdekat = ?,
+      skill = ?,
+      penempatan_bebas = ?,
+      penghasilan_diharapkan = ?
+    WHERE email = ?
+  `;
+
+  const values = [
+    posisi,
+    nama,
+    no_ktp,
+    tempat_tgl_lahir,
+    jenis_kelamin,
+    agama,
+    golongan_darah,
+    status,
+    alamat_ktp,
+    alamat_tinggal,
+    no_telp,
+    orang_terdekat,
+    skill,
+    penempatan_bebas,
+    penghasilan_diharapkan,
+    email,
+  ];
+
+  db.query(query, values, (err, result) => {
+    if (err) {
+      console.error("Error updating data:", err);
+      res.status(500).send("Internal Server Error");
+    } else {
+      console.log("Data updated successfully");
+      res.status(200).send("Data updated successfully");
+    }
+  });
+});
+
 app.listen(port, () => {
   console.log(`Backend Running With Port : ${port}`);
 });

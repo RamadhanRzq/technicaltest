@@ -2,7 +2,7 @@ import { FaPlusCircle } from "react-icons/fa";
 import { LuPencilLine } from "react-icons/lu";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -10,17 +10,20 @@ import { useForm } from "react-hook-form";
 
 export default function Home() {
   const navigate = useNavigate();
-  const [biodataList, setBiodataList] = useState([]);
+  const [formDisabled, setFormDisabled] = useState(true);
+  const [isDataAvailable, setIsDataAvailable] = useState(true);
   const userRoles = useSelector((state) => state.auth.user.roles);
+  const userEmail = useSelector((state) => state.auth.user.email);
 
   const isAdmin = userRoles === "admin";
+  console.log(userEmail);
 
   const handleTambahBiodata = () => {
     navigate("/formbiodata/add");
   };
 
-  const handleKembali = () => {
-    navigate("/home");
+  const handleFormDisabled = () => {
+    setFormDisabled(false);
   };
 
   const schema = yup.object().shape({
@@ -34,6 +37,7 @@ export default function Home() {
 
   const {
     register,
+    setValue,
     handleSubmit,
     formState: { errors },
   } = useForm({
@@ -42,12 +46,13 @@ export default function Home() {
 
   const onSubmitForm = async (data) => {
     try {
-      const response = await axios.post(
-        "http://localhost:3000/api/biodata",
+      const response = await axios.patch(
+        `http://localhost:3000/api/biodata/${userEmail}`,
         data
       );
+      alert("Sukses Update Data");
+      setFormDisabled(true);
       console.log("Server response:", response.data);
-      navigate("/home");
     } catch (error) {
       console.error(
         "Error submitting data:",
@@ -59,34 +64,69 @@ export default function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/biodata");
-        setBiodataList(response.data);
+        const response = await axios.get(
+          `http://localhost:3000/api/biodata/${userEmail}`,
+          {}
+        );
+        const biodataUser = response.data[0];
+
+        if (biodataUser) {
+          setValue("posisi", biodataUser.posisi);
+          setValue("nama", biodataUser.nama);
+          setValue("no_ktp", biodataUser.no_ktp);
+          setValue("tempat_tgl_lahir", biodataUser.tempat_tgl_lahir);
+          setValue("jenis_kelamin", biodataUser.jenis_kelamin);
+          setValue("agama", biodataUser.agama);
+          setValue("golongan_darah", biodataUser.golongan_darah);
+          setValue("status", biodataUser.status);
+          setValue("alamat_ktp", biodataUser.alamat_ktp);
+          setValue("alamat_tinggal", biodataUser.alamat_tinggal);
+          setValue("email", biodataUser.email);
+          setValue("no_telp", biodataUser.no_telp);
+          setValue("orang_terdekat", biodataUser.orang_terdekat);
+          setValue("skill", biodataUser.skill);
+          setValue("penempatan_bebas", biodataUser.penempatan_bebas);
+          setValue(
+            "penghasilan_diharapkan",
+            biodataUser.penghasilan_diharapkan
+          );
+          setIsDataAvailable(true);
+        } else {
+          setIsDataAvailable(false);
+        }
       } catch (error) {
-        console.error("Error fetching biodata:", error);
+        console.error(error);
+        setIsDataAvailable(false);
       }
     };
 
     fetchData();
-  }, []);
+  }, [setValue, userEmail]);
 
   return (
     <>
       <div className="flex justify-end">
-        <div className="m-4">
-          <button
-            className="flex items-center p-2 rounded-lg border-none bg-color1_selected text-white hover:bg-hijau "
-            onClick={handleTambahBiodata}
-          >
-            Tambah Biodata
-            <FaPlusCircle className="ml-2" />
-          </button>
-        </div>
-        <div className="m-4">
-          <button className="flex items-center p-2 rounded-lg border-none bg-color1_selected text-white hover:bg-hijau ">
-            Edit Biodata
-            <LuPencilLine className="ml-2" />
-          </button>
-        </div>
+        {isDataAvailable ? (
+          <div className="m-4">
+            <button
+              className="flex items-center p-2 rounded-lg border-none bg-color1_selected text-white hover:bg-hijau"
+              onClick={handleFormDisabled}
+            >
+              Edit Biodata
+              <LuPencilLine className="ml-2" />
+            </button>
+          </div>
+        ) : (
+          <div className="m-4">
+            <button
+              className="flex items-center p-2 rounded-lg border-none bg-color1_selected text-white hover:bg-hijau"
+              onClick={handleTambahBiodata}
+            >
+              Tambah Biodata
+              <FaPlusCircle className="ml-2" />
+            </button>
+          </div>
+        )}
         {isAdmin && (
           <div className="m-4">
             <Link to="/admin/home">
@@ -108,6 +148,7 @@ export default function Home() {
                 <span className="label-text">Posisi Yang Dilamar</span>
               </div>
               <input
+                disabled={formDisabled}
                 type="posisi"
                 className="input input-bordered"
                 name="posisi"
@@ -124,6 +165,7 @@ export default function Home() {
                 <span className="label-text">Nama</span>
               </div>
               <input
+                disabled={formDisabled}
                 type="nama"
                 className="input input-bordered"
                 name="nama"
@@ -140,6 +182,7 @@ export default function Home() {
                 <span className="label-text">No. KTP</span>
               </div>
               <input
+                disabled={formDisabled}
                 type="no_ktp"
                 className="input input-bordered"
                 name="no_ktp"
@@ -156,6 +199,7 @@ export default function Home() {
                 <span className="label-text">Tempat, Tanggal Lahir</span>
               </div>
               <input
+                disabled={formDisabled}
                 type="tempat_tgl_lahir"
                 className="input input-bordered"
                 name="tempat_tgl_lahir"
@@ -173,6 +217,7 @@ export default function Home() {
               </div>
               <div className="mt-1">
                 <select
+                  disabled={formDisabled}
                   id="jenis_kelamin"
                   name="jenis_kelamin"
                   autoComplete="jenis_kelamin"
@@ -189,6 +234,7 @@ export default function Home() {
                 <span className="label-text">Agama</span>
               </div>
               <input
+                disabled={formDisabled}
                 type="agama"
                 className="input input-bordered"
                 name="agama"
@@ -205,6 +251,7 @@ export default function Home() {
                 <span className="label-text">Golongan Darah</span>
               </div>
               <input
+                disabled={formDisabled}
                 type="golongan_darah"
                 className="input input-bordered"
                 name="golongan_darah"
@@ -221,6 +268,7 @@ export default function Home() {
                 <span className="label-text">Status</span>
               </div>
               <input
+                disabled={formDisabled}
                 type="status"
                 className="input input-bordered"
                 name="status"
@@ -237,6 +285,7 @@ export default function Home() {
                 <span className="label-text">Alamat KTP</span>
               </div>
               <input
+                disabled={formDisabled}
                 type="alamat_ktp"
                 className="input input-bordered"
                 name="alamat_ktp"
@@ -253,6 +302,7 @@ export default function Home() {
                 <span className="label-text">Alamat Tinggal </span>
               </div>
               <input
+                disabled={formDisabled}
                 type="alamat_tinggal"
                 className="input input-bordered"
                 name="alamat_tinggal"
@@ -269,6 +319,7 @@ export default function Home() {
                 <span className="label-text">Email</span>
               </div>
               <input
+                disabled={formDisabled}
                 type="email"
                 className="input input-bordered"
                 name="email"
@@ -285,6 +336,7 @@ export default function Home() {
                 <span className="label-text">Nomor Telepon</span>
               </div>
               <input
+                disabled={formDisabled}
                 type="no_telp"
                 className="input input-bordered"
                 name="no_telp"
@@ -303,6 +355,7 @@ export default function Home() {
                 </span>
               </div>
               <input
+                disabled={formDisabled}
                 type="orang_terdekat"
                 className="input input-bordered"
                 name="orang_terdekat"
@@ -319,6 +372,7 @@ export default function Home() {
                 <span className="label-text">Skill</span>
               </div>
               <input
+                disabled={formDisabled}
                 type="skill"
                 className="input input-bordered"
                 name="skill"
@@ -338,6 +392,7 @@ export default function Home() {
               </div>
               <div className="mt-1">
                 <select
+                  disabled={formDisabled}
                   id="penempatan_bebas"
                   name="penempatan_bebas"
                   autoComplete="penempatan_bebas"
@@ -356,6 +411,7 @@ export default function Home() {
                 </span>
               </div>
               <input
+                disabled={formDisabled}
                 type="penghasilan_diharapkan"
                 className="input input-bordered"
                 name="penghasilan_diharapkan"
