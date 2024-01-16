@@ -108,8 +108,79 @@ app.get("/user/:id", async (req, res) => {
   }
 });
 
-app.get("/", (req, res) => {
-  res.send("Halaman Utama");
+app.post("/api/biodata", (req, res) => {
+  const {
+    posisi,
+    nama,
+    no_ktp,
+    tempat_lahir,
+    tanggal_lahir,
+    jenis_kelamin,
+    agama,
+    golongan_darah,
+    status,
+    alamat_ktp,
+    alamat_tinggal,
+    email,
+    no_telp,
+    orang_terdekat,
+    skill,
+    penempatan_bebas,
+    penghasilan_diharapkan,
+  } = req.body;
+
+  const query = `
+    INSERT INTO biodata (
+      posisi,
+      nama,
+      no_ktp,
+      tempat_lahir,
+      tanggal_lahir,
+      jenis_kelamin,
+      agama,
+      golongan_darah,
+      status,
+      alamat_ktp,
+      alamat_tinggal,
+      email,
+      no_telp,
+      orang_terdekat,
+      skill,
+      penempatan_bebas,
+      penghasilan_diharapkan
+    )
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `;
+
+  const values = [
+    posisi,
+    nama,
+    no_ktp,
+    tempat_lahir,
+    tanggal_lahir,
+    jenis_kelamin,
+    agama,
+    golongan_darah,
+    status,
+    alamat_ktp,
+    alamat_tinggal,
+    email,
+    no_telp,
+    orang_terdekat,
+    skill,
+    penempatan_bebas,
+    penghasilan_diharapkan,
+  ];
+
+  db.query(query, values, (err, result) => {
+    if (err) {
+      console.error("Error inserting data:", err);
+      res.status(500).send("Internal Server Error");
+    } else {
+      console.log("Data inserted successfully");
+      res.status(201).send("Data inserted successfully");
+    }
+  });
 });
 
 app.listen(port, () => {
