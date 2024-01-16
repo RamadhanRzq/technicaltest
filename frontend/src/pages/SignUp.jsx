@@ -20,6 +20,7 @@ export default function SignUp() {
     try {
       await axios.post("http://localhost:3000/signup", formData);
     } catch (error) {
+      alert("Email is already registered");
       console.error(
         "Error registering user:",
         error.response?.data || error.message

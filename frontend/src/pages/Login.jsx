@@ -36,7 +36,7 @@ export default function Login() {
         reset();
         navigate("/home");
       })
-      .catch((error) => alert(error.response.data));
+      .catch(() => alert("Email dan Password Salah"));
   };
 
   return (

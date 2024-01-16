@@ -13,7 +13,7 @@ const db = createPool({
   host: "localhost",
   user: "root",
   password: "",
-  database: "biodata",
+  database: "datakaryawan",
 }).promise();
 
 const secretKey =
@@ -23,9 +23,7 @@ app.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
-      return res
-        .status(400)
-        .json({ error: "Username and password are required" });
+      return res.status(400).json({ error: "Email and password are required" });
     }
 
     const [rows] = await db.query(
@@ -82,22 +80,6 @@ app.post("/signup", async (req, res) => {
     console.error("Error inserting data:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
-});
-
-app.get("/current-user", (req, res) => {
-  const token = req.headers.authorization;
-
-  if (!token) {
-    return res.status(401).json({ error: "No token provided" });
-  }
-
-  jwt.verify(token, secretKey, (err, decoded) => {
-    if (err) {
-      return res.status(401).json({ error: "Invalid token" });
-    }
-
-    res.json({ user: decoded });
-  });
 });
 
 app.get("/user", async (req, res) => {

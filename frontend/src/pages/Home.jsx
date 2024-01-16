@@ -2,11 +2,13 @@ import React from "react";
 import { FaPlusCircle } from "react-icons/fa";
 import { LuPencilLine } from "react-icons/lu";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 export default function Home() {
-  const user = useSelector((state) => state.auth.user);
+  const userRoles = useSelector((state) => state.auth.user.roles);
 
-  console.log(user);
+  const isAdmin = userRoles === "admin";
+
   return (
     <div className="flex justify-end">
       <div className="m-4">
@@ -21,6 +23,15 @@ export default function Home() {
           <LuPencilLine className="ml-2" />
         </button>
       </div>
+      {isAdmin && (
+        <div className="m-4">
+          <Link to="/admin/home">
+            <button className="flex items-center p-2 rounded-lg border-none bg-color1_selected text-white hover:bg-hijau ">
+              Halaman Admin
+            </button>
+          </Link>
+        </div>
+      )}
     </div>
   );
 }
