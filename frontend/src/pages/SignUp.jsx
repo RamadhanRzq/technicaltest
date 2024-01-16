@@ -6,6 +6,7 @@ export default function SignUp() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
+    roles: "user",
   });
 
   const handleChange = (e) => {

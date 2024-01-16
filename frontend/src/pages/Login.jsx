@@ -1,33 +1,42 @@
-import React, { useState } from "react";
+import React from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setToken, setUser } from "../store/reducers/authSlice.js";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { useForm } from "react-hook-form";
 
 export default function Login() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+
+  const schema = yup.object().shape({
+    email: yup.string().email().required("Email is required"),
+    password: yup.string().min(5).max(32).required(),
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
-  };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      const response = await axios.post(
-        "http://localhost:3000/login",
-        formData
-      );
-      const { token } = response.data;
-      localStorage.setItem("token", token);
-      navigate("/home");
-    } catch (error) {
-      console.error("Error logging in:", error.response?.data || error.message);
-    }
+  const onSubmitForm = (data) => {
+    axios
+      .post("http://localhost:3000/login", data)
+      .then((res) => {
+        const { token } = res.data;
+        const { user } = res.data;
+        dispatch(setToken(token));
+        dispatch(setUser(user));
+        reset();
+        navigate("/home");
+      })
+      .catch((error) => alert(error.response.data));
   };
 
   return (
@@ -37,7 +46,7 @@ export default function Login() {
           <p className="font-semibold text-center text-3xl text-color1_selected">
             Login
           </p>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit(onSubmitForm)}>
             <div className="flex flex-col gap-4">
               <label className="form-control w-full">
                 <div className="label">
@@ -51,9 +60,11 @@ export default function Login() {
                   type="text"
                   className="border-2 border-gray-500 w-full text-xl"
                   autoComplete="email"
-                  value={formData.email}
-                  onChange={handleChange}
+                  {...register("email")}
                 />
+                <p className="error text-sm text-red-600">
+                  {errors.email?.message}
+                </p>
               </label>
               <label className="form-control w-full">
                 <div className="label">
@@ -68,10 +79,12 @@ export default function Login() {
                     id="password"
                     className="border-2 border-gray-500 w-full text-xl"
                     autoComplete="current-password"
-                    value={formData.password}
-                    onChange={handleChange}
+                    {...register("password")}
                   />
                 </div>
+                <p className="error text-sm text-red-600">
+                  {errors.password?.message}
+                </p>
               </label>
               <button
                 type="submit"

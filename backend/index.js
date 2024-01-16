@@ -43,7 +43,14 @@ app.post("/login", async (req, res) => {
       { expiresIn: "1h" }
     );
 
-    res.json({ success: true, message: "Login successful", token });
+    const user = {
+      id: rows[0].id,
+      email: rows[0].email,
+      password: rows[0].password,
+      roles: rows[0].roles,
+    };
+
+    res.json({ success: true, message: "Login successful", token, user });
   } catch (error) {
     console.error("Error validating login:", error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -52,7 +59,7 @@ app.post("/login", async (req, res) => {
 
 app.post("/signup", async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, roles } = req.body;
     const [existingUsers] = await db.query(
       "SELECT * FROM login WHERE email = ?",
       [email]
@@ -62,8 +69,8 @@ app.post("/signup", async (req, res) => {
       return res.status(400).json({ error: "Email is already registered" });
     }
     const insertResult = await db.query(
-      "INSERT INTO login (email, password) VALUES (?, ?)",
-      [email, password]
+      "INSERT INTO login (email, password, roles) VALUES (?, ?, ?)",
+      [email, password, roles]
     );
 
     res.json({

@@ -1,33 +1,26 @@
-import { getAllUsers } from "../utils/apiUser";
-import React, { useState, useEffect } from "react";
+import React from "react";
+import { FaPlusCircle } from "react-icons/fa";
+import { LuPencilLine } from "react-icons/lu";
+import { useSelector } from "react-redux";
 
 export default function Home() {
-  const [userData, setUserData] = useState(null);
+  const user = useSelector((state) => state.auth.user);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const result = await getAllUsers();
-        setUserData(result.users);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
+  console.log(user);
   return (
-    <div className="flex justify-center items-center min-h-screen">
-      {userData &&
-        userData.map((user) => (
-          <div key={user.id}>
-            <div className="flex flex-col list-none">
-              <li> {user.username}</li>
-              <li>{user.password}</li>
-            </div>
-          </div>
-        ))}
+    <div className="flex justify-end">
+      <div className="m-4">
+        <button className="flex items-center p-2 rounded-lg border-none bg-color1_selected text-white hover:bg-hijau ">
+          Tambah Biodata
+          <FaPlusCircle className="ml-2" />
+        </button>
+      </div>
+      <div className="m-4">
+        <button className="flex items-center p-2 rounded-lg border-none bg-color1_selected text-white hover:bg-hijau ">
+          Edit Biodata
+          <LuPencilLine className="ml-2" />
+        </button>
+      </div>
     </div>
   );
 }
