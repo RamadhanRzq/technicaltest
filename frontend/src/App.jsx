@@ -1,13 +1,11 @@
-import { getAllUsers } from "./utils/apiUser";
+import { Routes, Route, Navigate } from "react-router-dom";
+import Login from "./Login";
 
 export default function App() {
-  const { data } = getAllUsers();
-
-  console.log(data);
-
   return (
-    <div className="flex justify-center items-center min-h-screen">
-      <header className="App-header">Learn React</header>
-    </div>
+    <Routes>
+      <Route path="/" element={<Navigate to="/login" />} />
+      <Route path="/login" element={<Login />} />
+    </Routes>
   );
 }
