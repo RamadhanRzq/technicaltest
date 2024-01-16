@@ -89,7 +89,7 @@ app.get("/current-user", (req, res) => {
   });
 });
 
-app.get("/user", async (res) => {
+app.get("/user", async (req, res) => {
   try {
     const [rows] = await db.query("SELECT * FROM login");
     res.json({ users: rows });
