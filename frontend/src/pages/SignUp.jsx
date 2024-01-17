@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function SignUp() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -19,6 +20,8 @@ export default function SignUp() {
 
     try {
       await axios.post("http://localhost:3000/signup", formData);
+      alert("Success Sign Up");
+      navigate("/login");
     } catch (error) {
       alert("Email is already registered");
       console.error(

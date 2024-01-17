@@ -6,8 +6,14 @@ import SignUp from "./pages/SignUp";
 import HomeAdmin from "./pages/HomeAdmin";
 import AdminRoutes from "./routes/AdminRoutes";
 import FormBiodataAdd from "./pages/FormBiodataAdd";
-import FormBiodataUpdate from "./pages/FormBiodataUpdate";
 import FormPendidikanAdd from "./pages/FormPendidikanAdd";
+import FormPelatihanAdd from "./pages/FormPelatihanAdd";
+import FormPekerjaanAdd from "./pages/FormPekerjaanAdd";
+import FormBiodataUpdate from "./pages/FormBiodataUpdate";
+import FormPendidikanUpdate from "./pages/FormPendidikanUpdate";
+import FormPelatihanUpdate from "./pages/FormPelatihanUpdate";
+import FormPekerjaanUpdate from "./pages/FormPekerjaanUpdate";
+import DetailBiodataAdmin from "./pages/DetailBiodataAdmin";
 
 const isAuthenticated = () => {
   return !!localStorage.getItem("token");
@@ -26,6 +32,7 @@ export default function App() {
     <Layout>
       <Routes>
         <Route path="/" element={<Navigate to="/home" />} />
+        <Route path="*" element={<Navigate to="/home" />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/home" element={<PrivateRoute element={<Home />} />} />
@@ -41,11 +48,35 @@ export default function App() {
           path="/formpendidikan/add"
           element={<PrivateRoute element={<FormPendidikanAdd />} />}
         />
+        <Route
+          path="/formpendidikan/update"
+          element={<PrivateRoute element={<FormPendidikanUpdate />} />}
+        />
+        <Route
+          path="/formpelatihan/add"
+          element={<PrivateRoute element={<FormPelatihanAdd />} />}
+        />
+        <Route
+          path="/formpelatihan/update"
+          element={<PrivateRoute element={<FormPelatihanUpdate />} />}
+        />
+        <Route
+          path="/formpekerjaan/add"
+          element={<PrivateRoute element={<FormPekerjaanAdd />} />}
+        />
+        <Route
+          path="/formpekerjaan/update"
+          element={<PrivateRoute element={<FormPekerjaanUpdate />} />}
+        />
 
         <Route element={<AdminRoutes />}>
           <Route
             path="/admin/home"
             element={<PrivateRoute element={<HomeAdmin />} />}
+          />
+          <Route
+            path="/admin/biodata/detail/:user_id"
+            element={<PrivateRoute element={<DetailBiodataAdmin />} />}
           />
         </Route>
       </Routes>

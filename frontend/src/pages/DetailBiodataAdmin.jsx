@@ -2,55 +2,18 @@
 import { FaPlusCircle, FaTrash } from "react-icons/fa";
 import { LuPencilLine } from "react-icons/lu";
 import { useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 
-export default function Home() {
-  const navigate = useNavigate();
+export default function DetailBiodataAdmin() {
   const [dataUser, setDataUser] = useState({});
   const [dataPendidikan, setDataPendidikan] = useState({});
   const [dataPelatihan, setDataPelatihan] = useState({});
   const [dataPekerjaan, setDataPekerjaan] = useState({});
-  const userRoles = useSelector((state) => state.auth.user.roles);
-  const userId = useSelector((state) => state.auth.user.id);
-
-  const isAdmin = userRoles === "admin";
-
-  const handleTambahBiodata = () => {
-    navigate("/formbiodata/add");
-  };
-
-  const handleTambahPendidikan = () => {
-    navigate("/formpendidikan/add");
-  };
-
-  const handleTambahPelatihan = () => {
-    navigate("/formpelatihan/add");
-  };
-
-  const handleTambahPekerjaan = () => {
-    navigate("/formpekerjaan/add");
-  };
-
-  const handleEditBiodata = () => {
-    navigate("/formbiodata/update");
-  };
-
-  const handleEditPendidikan = () => {
-    navigate("/formpendidikan/update");
-  };
-
-  const handleEditPelatihan = () => {
-    navigate("/formpelatihan/update");
-  };
-
-  const handleEditPekerjaan = () => {
-    navigate("/formpekerjaan/update");
-  };
+  const { id } = useParams();
 
   useEffect(() => {
-    fetch(`http://localhost:3000/api/biodata/${userId}`)
+    fetch(`http://localhost:3000/api/biodata/${id}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -58,15 +21,16 @@ export default function Home() {
         return response.json();
       })
       .then((data) => {
+        console.log("Data User:", data);
         setDataUser(data[0] || {});
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-  }, [userId]);
+  }, [id]);
 
   useEffect(() => {
-    fetch(`http://localhost:3000/api/pendidikan/${userId}`)
+    fetch(`http://localhost:3000/api/pendidikan/${id}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -79,10 +43,10 @@ export default function Home() {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-  }, [userId]);
+  }, [id]);
 
   useEffect(() => {
-    fetch(`http://localhost:3000/api/pelatihan/${userId}`)
+    fetch(`http://localhost:3000/api/pelatihan/${id}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -95,10 +59,10 @@ export default function Home() {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-  }, [userId]);
+  }, [id]);
 
   useEffect(() => {
-    fetch(`http://localhost:3000/api/pekerjaan/${userId}`)
+    fetch(`http://localhost:3000/api/pekerjaan/${id}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -111,7 +75,7 @@ export default function Home() {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-  }, [userId]);
+  }, [id]);
 
   const dataFieldsUser = [
     { label: "Posisi", value: dataUser.posisi },
@@ -157,39 +121,7 @@ export default function Home() {
 
   return (
     <div className="flex flex-col gap-10">
-      <div className="flex justify-end">
-        <>
-          <div className="m-4">
-            <button
-              className="flex items-center p-2 rounded-lg border-none bg-color1_selected text-white hover:bg-hijau"
-              onClick={handleEditBiodata}
-            >
-              Edit Data Biodata
-              <LuPencilLine className="ml-2" />
-            </button>
-          </div>
-        </>
-        <>
-          <div className="m-4">
-            <button
-              className="flex items-center p-2 rounded-lg border-none bg-color1_selected text-white hover:bg-hijau"
-              onClick={handleTambahBiodata}
-            >
-              Tambah Biodata
-              <FaPlusCircle className="ml-2" />
-            </button>
-          </div>
-        </>
-        {isAdmin && (
-          <div className="m-4">
-            <Link to="/admin/home">
-              <button className="flex items-center p-2 rounded-lg border-none bg-color1_selected text-white hover:bg-hijau ">
-                Halaman Admin
-              </button>
-            </Link>
-          </div>
-        )}
-      </div>
+      <div className="flex justify-end"></div>
       <div className="flex flex-col shadow-md mx-auto w-1/2 mt-4  rounded-md">
         <div className="text-2xl items-center justify-center flex w-full font-bold mt-2">
           BIODATA CALON KARYAWAN
@@ -203,30 +135,7 @@ export default function Home() {
           ))}
         </div>
       </div>
-      <div className="flex justify-end">
-        <>
-          <div className="m-4">
-            <button
-              className="flex items-center p-2 rounded-lg border-none bg-color1_selected text-white hover:bg-hijau"
-              onClick={handleEditPendidikan}
-            >
-              Edit Data Pendidikan
-              <LuPencilLine className="ml-2" />
-            </button>
-          </div>
-        </>
-        <>
-          <div className="m-4">
-            <button
-              className="flex items-center p-2 rounded-lg border-none bg-color1_selected text-white hover:bg-hijau"
-              onClick={handleTambahPendidikan}
-            >
-              Tambah Data Pendidikan
-              <FaPlusCircle className="ml-2" />
-            </button>
-          </div>
-        </>
-      </div>
+      <div className="flex justify-end"></div>
       <div className="flex flex-col shadow-md mx-auto w-1/2 mt-4  rounded-md">
         <div className="text-2xl items-center justify-center flex w-full font-bold mt-2">
           DATA PENDIDIKAN TERAKHIR
@@ -240,30 +149,7 @@ export default function Home() {
           ))}
         </div>
       </div>
-      <div className="flex justify-end">
-        <>
-          <div className="m-4">
-            <button
-              className="flex items-center p-2 rounded-lg border-none bg-color1_selected text-white hover:bg-hijau"
-              onClick={handleEditPelatihan}
-            >
-              Edit Data Pelatihan
-              <LuPencilLine className="ml-2" />
-            </button>
-          </div>
-        </>
-        <>
-          <div className="m-4">
-            <button
-              className="flex items-center p-2 rounded-lg border-none bg-color1_selected text-white hover:bg-hijau"
-              onClick={handleTambahPelatihan}
-            >
-              Tambah Data Pelatihan
-              <FaPlusCircle className="ml-2" />
-            </button>
-          </div>
-        </>
-      </div>
+      <div className="flex justify-end"></div>
       <div className="flex flex-col shadow-md mx-auto w-1/2 mt-4  rounded-md">
         <div className="text-2xl items-center justify-center flex w-full font-bold mt-2">
           DATA RIWAYAT PELATIHAN
@@ -277,30 +163,7 @@ export default function Home() {
           ))}
         </div>
       </div>
-      <div className="flex justify-end">
-        <>
-          <div className="m-4">
-            <button
-              className="flex items-center p-2 rounded-lg border-none bg-color1_selected text-white hover:bg-hijau"
-              onClick={handleTambahPekerjaan}
-            >
-              Edit Data Pekerjaan
-              <LuPencilLine className="ml-2" />
-            </button>
-          </div>
-        </>
-        <>
-          <div className="m-4">
-            <button
-              className="flex items-center p-2 rounded-lg border-none bg-color1_selected text-white hover:bg-hijau"
-              onClick={handleEditPekerjaan}
-            >
-              Tambah Data Pekerjaan
-              <FaPlusCircle className="ml-2" />
-            </button>
-          </div>
-        </>
-      </div>
+      <div className="flex justify-end"></div>
       <div className="flex flex-col shadow-md mx-auto w-1/2 mt-4  rounded-md">
         <div className="text-2xl items-center justify-center flex w-full font-bold mt-2">
           DATA RIWAYAT PEKERJAAN

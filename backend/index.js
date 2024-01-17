@@ -209,7 +209,7 @@ app.get("/api/biodata/:user_id", async (req, res) => {
 });
 
 app.patch("/api/biodata/:user_id", (req, res) => {
-  const email = req.params.user_id;
+  const user_id = req.params.user_id;
 
   const {
     posisi,
@@ -266,7 +266,7 @@ app.patch("/api/biodata/:user_id", (req, res) => {
     skill,
     penempatan_bebas,
     penghasilan_diharapkan,
-    email,
+    user_id,
   ];
 
   db.query(query, values, (err, result) => {
@@ -280,15 +280,15 @@ app.patch("/api/biodata/:user_id", (req, res) => {
   });
 });
 
-app.delete("/api/biodata/:user_id", (req, res) => {
-  const user_id = req.params.user_id;
+app.delete("/api/biodata/:id", (req, res) => {
+  const id = req.params.id;
 
   const query = `
     DELETE FROM biodata
-    WHERE user_id = ?
+    WHERE id = ?
   `;
 
-  const values = [user_id];
+  const values = [id];
 
   db.query(query, values, (err, result) => {
     if (err) {
@@ -359,7 +359,7 @@ app.get("/api/pendidikan/:user_id", async (req, res) => {
 });
 
 app.patch("/api/pendidikan/:user_id", (req, res) => {
-  const email = req.params.user_id;
+  const user_id = req.params.user_id;
 
   const { jenjang_pendidikan, nama_institusi, jurusan, tahun_lulus, ipk } =
     req.body;
@@ -371,7 +371,7 @@ app.patch("/api/pendidikan/:user_id", (req, res) => {
     nama_institusi = ?,
     jurusan = ?,
     tahun_lulus = ?,
-    ipk = ?,
+    ipk = ?
     WHERE user_id = ?
   `;
 
@@ -381,6 +381,7 @@ app.patch("/api/pendidikan/:user_id", (req, res) => {
     jurusan,
     tahun_lulus,
     ipk,
+    user_id,
   ];
 
   db.query(query, values, (err, result) => {
@@ -423,7 +424,7 @@ app.post("/api/pelatihan", (req, res) => {
   INSERT INTO riwayat_pelatihan (
     nama_pelatihan, sertifikat, tahun, user_id
   )
-  VALUES (?, ?, ?, ?, ?, ?);`;
+  VALUES (?, ?, ?, ?);`;
 
   const values = [nama_pelatihan, sertifikat, tahun, user_id];
 
@@ -454,7 +455,7 @@ app.get("/api/pelatihan/:user_id", async (req, res) => {
 });
 
 app.patch("/api/pelatihan/:user_id", (req, res) => {
-  const email = req.params.user_id;
+  const user_id = req.params.user_id;
 
   const { nama_pelatihan, sertifikat, tahun } = req.body;
 
@@ -465,7 +466,7 @@ app.patch("/api/pelatihan/:user_id", (req, res) => {
     WHERE user_id = ?
   `;
 
-  const values = [nama_pelatihan, sertifikat, tahun];
+  const values = [nama_pelatihan, sertifikat, tahun, user_id];
 
   db.query(query, values, (err, result) => {
     if (err) {
@@ -510,7 +511,7 @@ app.post("/api/pekerjaan", (req, res) => {
   } = req.body;
 
   const query = `
-  INSERT INTO riwayat_pelatihan (
+  INSERT INTO riwayat_pekerjaan (
     nama_perusahaan,
     posisi_terakhir,
     pendapatan_terakhir,
@@ -554,7 +555,7 @@ app.get("/api/pekerjaan/:user_id", async (req, res) => {
 });
 
 app.patch("/api/pekerjaan/:user_id", (req, res) => {
-  const email = req.params.user_id;
+  const user_id = req.params.user_id;
 
   const { nama_perusahaan, posisi_terakhir, pendapatan_terakhir, tahun } =
     req.body;
@@ -565,11 +566,17 @@ app.patch("/api/pekerjaan/:user_id", (req, res) => {
     nama_perusahaan = ?,
     posisi_terakhir = ?,
     pendapatan_terakhir = ?,
-    tahun = ?,
+    tahun = ?
     WHERE user_id = ?
   `;
 
-  const values = [nama_perusahaan, posisi_terakhir, pendapatan_terakhir, tahun];
+  const values = [
+    nama_perusahaan,
+    posisi_terakhir,
+    pendapatan_terakhir,
+    tahun,
+    user_id,
+  ];
 
   db.query(query, values, (err, result) => {
     if (err) {

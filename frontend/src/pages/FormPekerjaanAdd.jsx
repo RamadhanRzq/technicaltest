@@ -6,7 +6,7 @@ import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 
-export default function FormPendidikanAdd() {
+export default function FormPekerjaanAdd() {
   const navigate = useNavigate();
   const userId = useSelector((state) => state.auth.user.id);
 
@@ -15,11 +15,10 @@ export default function FormPendidikanAdd() {
   };
 
   const schema = yup.object().shape({
-    jenjang_pendidikan: yup.string().required("required"),
-    nama_institusi: yup.string().required("required"),
-    jurusan: yup.string().required("required"),
-    tahun_lulus: yup.string().required("required"),
-    ipk: yup.string().required("required"),
+    nama_perusahaan: yup.string().required("required"),
+    posisi_terakhir: yup.string().required("required"),
+    pendapatan_terakhir: yup.string().required("required"),
+    tahun: yup.string().required("required"),
   });
 
   const {
@@ -32,16 +31,15 @@ export default function FormPendidikanAdd() {
 
   const onSubmitForm = async (data) => {
     const payload = {
-      jenjang_pendidikan: data.jenjang_pendidikan,
-      nama_institusi: data.nama_institusi,
-      jurusan: data.jurusan,
-      tahun_lulus: data.tahun_lulus,
-      ipk: data.ipk,
+      nama_perusahaan: data.nama_perusahaan,
+      posisi_terakhir: data.posisi_terakhir,
+      pendapatan_terakhir: data.pendapatan_terakhir,
+      tahun: data.tahun,
       user_id: userId,
     };
     console.log(payload);
     try {
-      await axios.post("http://localhost:3000/api/pendidikan", payload);
+      await axios.post("http://localhost:3000/api/pekerjaan", payload);
       navigate("/home");
     } catch (error) {
       console.error(
@@ -62,89 +60,74 @@ export default function FormPendidikanAdd() {
         </button>
       </div>
       <div className="text-2xl items-center justify-center flex w-full">
-        FORM PENDIDIKAN TERAKHIR CALON KARYAWAN
+        FORM PELATIHAN CALON KARYAWAN
       </div>
       <form onSubmit={handleSubmit(onSubmitForm)}>
         <div className="flex flex-col gap-4 m-16 ">
           <label className="form-control">
             <div className="label">
-              <span className="label-text">Jenjang Pendidikan Terakhir</span>
+              <span className="label-text">Nama Perusahaan</span>
             </div>
             <input
               type="text"
               className="input input-bordered"
-              name="jenjang_pendidikan"
-              id="jenjang_pendidikan"
-              autoComplete="jenjang_pendidikan"
-              {...register("jenjang_pendidikan")}
+              name="nama_perusahaan"
+              id="nama_perusahaan"
+              autoComplete="nama_perusahaan"
+              {...register("nama_perusahaan")}
             />
             <p className="error text-sm text-red-600">
-              {errors.jenjang_terakhir?.message}
+              {errors.nama_perusahaan?.message}
             </p>
           </label>
           <label className="form-control">
             <div className="label">
-              <span className="label-text">Nama Institusi</span>
+              <span className="label-text">Posisi Terakhir</span>
             </div>
             <input
               type="text"
               className="input input-bordered"
-              name="nama_institusi"
-              id="nama_institusi"
-              autoComplete="nama_institusi"
-              {...register("nama_institusi")}
+              name="posisi_terakhir"
+              id="posisi_terakhir"
+              autoComplete="posisi_terakhir"
+              {...register("posisi_terakhir")}
             />
             <p className="error text-sm text-red-600">
-              {errors.nama_institusi?.message}
+              {errors.posisi_terakhir?.message}
             </p>
           </label>
           <label className="form-control">
             <div className="label">
-              <span className="label-text">Jurusan</span>
+              <span className="label-text">Pendapatan Terakhir</span>
             </div>
             <input
               type="text"
               className="input input-bordered"
-              name="jurusan"
-              id="jurusan"
-              autoComplete="jurusan"
-              {...register("jurusan")}
+              name="pendapatan_terakhir"
+              id="pendapatan_terakhir Terakhir"
+              autoComplete="pendapatan_terakhir"
+              {...register("pendapatan_terakhir")}
             />
             <p className="error text-sm text-red-600">
-              {errors.jurusan?.message}
+              {errors.pendapatan_terakhir?.message}
             </p>
           </label>
           <label className="form-control">
             <div className="label">
-              <span className="label-text">Tahun Lulus</span>
+              <span className="label-text">Tahun</span>
             </div>
             <input
               type="text"
               className="input input-bordered"
-              name="tahun_lulus"
-              id="tahun_lulus"
-              autoComplete="tahun_lulus"
-              {...register("tahun_lulus")}
+              name="tahun"
+              id="tahun"
+              autoComplete="tahun"
+              {...register("tahun")}
             />
             <p className="error text-sm text-red-600">
-              {errors.tahun_lulus?.message}
+              {errors.tahun?.message}
             </p>
           </label>
-          <label className="form-control">
-            <div className="label">
-              <span className="label-text">IPK</span>
-            </div>
-            <input
-              type="text"
-              className="input input-bordered"
-              name="ipk"
-              id="ipk"
-              autoComplete="ipk"
-              {...register("ipk")}
-            />
-            <p className="error text-sm text-red-600">{errors.ipk?.message}</p>
-          </label>
-
           <button className="bg-color1_selected hover:bg-color_home hover:text-color1_selected p-3 rounded-md text-color_home mt-2">
             Simpan
           </button>

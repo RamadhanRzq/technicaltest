@@ -7,7 +7,7 @@ import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
-export default function FormPendidikanUpdate() {
+export default function FormPekerjaanUpdate() {
   const userRoles = useSelector((state) => state.auth.user.roles);
   const userId = useSelector((state) => state.auth.user.id);
   const navigate = useNavigate();
@@ -15,11 +15,10 @@ export default function FormPendidikanUpdate() {
   const isAdmin = userRoles === "admin";
 
   const schema = yup.object().shape({
-    jenjang_pendidikan: yup.string().required("required"),
-    nama_institusi: yup.string().required("required"),
-    jurusan: yup.string().required("required"),
-    tahun_lulus: yup.string().required("required"),
-    ipk: yup.string().required("required"),
+    nama_perusahaan: yup.string().required("required"),
+    posisi_terakhir: yup.string().required("required"),
+    pendapatan_terakhir: yup.string().required("required"),
+    tahun: yup.string().required("required"),
   });
 
   const {
@@ -34,7 +33,7 @@ export default function FormPendidikanUpdate() {
   const onSubmitForm = async (data) => {
     try {
       const response = await axios.patch(
-        `http://localhost:3000/api/pendidikan/${userId}`,
+        `http://localhost:3000/api/pekerjaan/${userId}`,
         data
       );
 
@@ -58,17 +57,16 @@ export default function FormPendidikanUpdate() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/pendidikan/${userId}`,
+          `http://localhost:3000/api/pekerjaan/${userId}`,
           {}
         );
         const biodataUser = response.data[0];
 
         if (biodataUser) {
-          setValue("jenjang_pendidikan", biodataUser.jenjang_pendidikan);
-          setValue("nama_institusi", biodataUser.nama_institusi);
-          setValue("jurusan", biodataUser.jurusan);
-          setValue("tahun_lulus", biodataUser.tahun_lulus);
-          setValue("ipk", biodataUser.ipk);
+          setValue("nama_perusahaan", biodataUser.nama_perusahaan);
+          setValue("posisi_terakhir", biodataUser.posisi_terakhir);
+          setValue("pendapatan_terakhir", biodataUser.pendapatan_terakhir);
+          setValue("tahun", biodataUser.tahun);
         }
       } catch (error) {
         console.error(error);
@@ -100,18 +98,18 @@ export default function FormPendidikanUpdate() {
           <div className="flex flex-col gap-4 m-16 ">
             <label className="form-control">
               <div className="label">
-                <span className="label-text">Jenjang Pendidikan</span>
+                <span className="label-text">Nama Perusahaan</span>
               </div>
               <input
                 type="text"
                 className="input input-bordered"
-                name="jenjang_pendidikan"
-                id="jenjang_pendidikan"
-                autoComplete="jenjang_pendidikan"
-                {...register("jenjang_pendidikan")}
+                name="nama_perusahaan"
+                id="nama_perusahaan"
+                autoComplete="nama_perusahaan"
+                {...register("nama_perusahaan")}
               />
               <p className="error text-sm text-red-600">
-                {errors.posjenjang_pendidikanisi?.message}
+                {errors.nama_perusahaan?.message}
               </p>
             </label>
             <label className="form-control">
@@ -121,63 +119,48 @@ export default function FormPendidikanUpdate() {
               <input
                 type="text"
                 className="input input-bordered"
-                name="nama_institusi"
-                id="nama_institusi"
-                autoComplete="nama_institusi"
-                {...register("nama_institusi")}
+                name="posisi_terakhir"
+                id="posisi_terakhir"
+                autoComplete="posisi_terakhir"
+                {...register("posisi_terakhir")}
               />
               <p className="error text-sm text-red-600">
-                {errors.nama_institusi?.message}
+                {errors.posisi_terakhir?.message}
               </p>
             </label>
             <label className="form-control">
               <div className="label">
-                <span className="label-text">Jurusan</span>
+                <span className="label-text">Pendapatan Terakhir</span>
               </div>
               <input
                 type="text"
                 className="input input-bordered"
-                name="jurusan"
-                id="jurusan"
-                autoComplete="jurusan"
-                {...register("jurusan")}
+                name="pendapatan_terakhir"
+                id="pendapatan_terakhir"
+                autoComplete="pendapatan_terakhir"
+                {...register("pendapatan_terakhir")}
               />
               <p className="error text-sm text-red-600">
-                {errors.jurusan?.message}
+                {errors.pendapatan_terakhir?.message}
               </p>
             </label>
             <label className="form-control">
               <div className="label">
-                <span className="label-text">Tahun Lulus</span>
+                <span className="label-text">Tahun</span>
               </div>
               <input
                 type="text"
                 className="input input-bordered"
-                name="tahun_lulus"
-                id="tahun_lulus"
-                autoComplete="tahun_lulus"
-                {...register("tahun_lulus")}
+                name="tahun"
+                id="tahun"
+                autoComplete="tahun"
+                {...register("tahun")}
               />
               <p className="error text-sm text-red-600">
-                {errors.tahun_lulus?.message}
+                {errors.tahun?.message}
               </p>
             </label>
-            <label className="form-control">
-              <div className="label">
-                <span className="label-text">IPK</span>
-              </div>
-              <input
-                type="text"
-                className="input input-bordered"
-                name="ipk"
-                id="ipk"
-                autoComplete="ipk"
-                {...register("ipk")}
-              />
-              <p className="error text-sm text-red-600">
-                {errors.ipk?.message}
-              </p>
-            </label>
+
             <button className="bg-color1_selected hover:bg-color_home hover:text-color1_selected p-3 rounded-md text-color_home mt-2">
               Simpan
             </button>
