@@ -10,10 +10,10 @@ export default function DetailBiodataAdmin() {
   const [dataPendidikan, setDataPendidikan] = useState({});
   const [dataPelatihan, setDataPelatihan] = useState({});
   const [dataPekerjaan, setDataPekerjaan] = useState({});
-  const { id } = useParams();
+  const { user_id } = useParams();
 
   useEffect(() => {
-    fetch(`http://localhost:3000/api/biodata/${id}`)
+    fetch(`http://localhost:3000/api/biodata/${user_id}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -27,10 +27,10 @@ export default function DetailBiodataAdmin() {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-  }, [id]);
+  }, [user_id]);
 
   useEffect(() => {
-    fetch(`http://localhost:3000/api/pendidikan/${id}`)
+    fetch(`http://localhost:3000/api/pendidikan/${user_id}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -43,10 +43,10 @@ export default function DetailBiodataAdmin() {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-  }, [id]);
+  }, [user_id]);
 
   useEffect(() => {
-    fetch(`http://localhost:3000/api/pelatihan/${id}`)
+    fetch(`http://localhost:3000/api/pelatihan/${user_id}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -59,10 +59,10 @@ export default function DetailBiodataAdmin() {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-  }, [id]);
+  }, [user_id]);
 
   useEffect(() => {
-    fetch(`http://localhost:3000/api/pekerjaan/${id}`)
+    fetch(`http://localhost:3000/api/pekerjaan/${user_id}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -75,7 +75,7 @@ export default function DetailBiodataAdmin() {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-  }, [id]);
+  }, [user_id]);
 
   const dataFieldsUser = [
     { label: "Posisi", value: dataUser.posisi },
